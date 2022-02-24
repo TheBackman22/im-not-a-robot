@@ -34,7 +34,7 @@ class Perceptron:
         self.weights9 = []
         self.bias9 = 0
 
-    def get_array_from_class(self, train_class):
+    def get_vars_from_class(self, train_class):
         if (train_class == CLASS0): return self.weights0, self.bias0
         elif (train_class == CLASS1): return self.weights1, self.bias1
         elif (train_class == CLASS2): return self.weights2, self.bias2
@@ -46,30 +46,35 @@ class Perceptron:
         elif (train_class == CLASS8): return self.weights8, self.bias8
         elif (train_class == CLASS9): return self.weights9, self.bias9
 
-    ## TODO: adjust for multiclass perceptron: change the weight adjustment to adjust for the class it got wrong and the class
-    # it was supposed to guess 
     def train(self, train_set, train_labels, learning_rate, max_iter, train_class):
         # weights and bias param
+        # weights = np.zeros(len(train_set[0]))
+        # bias = 0
+        weights, bias = self.get_vars_from_class(train_class)
         weights = np.zeros(len(train_set[0]))
-        bias = 0
         
         for epoch in range(max_iter):
             for i in range(len(train_set)):
                 prediction = self.predict(train_set[i], bias)
                 if (train_labels[i] != prediction):
                     adjust = learning_rate * train_set[i]
-                    if train_labels[i] < prediction:
-                        adjust *= -1
+                    adjust_w, adjust_b = self.get_array_from_class(train_class)
+                    # adjust the weight bias and vectors of the variables that it predicted wrong
+                    adjust_w -= adjust
+                    adjust_b -= adjust
                     weights += adjust
-                    bias += learning_rate * (train_labels[i] - prediction)
+                    bias += adjust
+
+                    # if train_labels[i] < prediction:
+                    #     adjust *= -1
+                    # weights += adjust
+                    # bias += learning_rate * (train_labels[i] - prediction)
 
 
 
         # return the trained weight and bias parameters
         ## TODO this pointer stuff might not work
-        w, b = self.get_array_from_class(train_class)
-        w = weights
-        b = bias
+        # w, b = self.get_array_from_class(train_class)
         return weights, bias
 
     def predict(self, image, bias):
@@ -79,27 +84,27 @@ class Perceptron:
         greatest = 0
         if (np.dot(image, self.weights0) + self.bias0) > greatest:
             greatest = CLASS0
-        if (np.dot(image, self.weights0) + self.bias0) > greatest:
+        if (np.dot(image, self.weights1) + self.bias1) > greatest:
             greatest = CLASS1
-        if (np.dot(image, self.weights0) + self.bias0) > greatest:
+        if (np.dot(image, self.weights2) + self.bias2) > greatest:
             greatest = CLASS2
-        if (np.dot(image, self.weights0) + self.bias0) > greatest:
+        if (np.dot(image, self.weights3) + self.bias3) > greatest:
             greatest = CLASS3
-        if (np.dot(image, self.weights0) + self.bias0) > greatest:
+        if (np.dot(image, self.weights4) + self.bias4) > greatest:
             greatest = CLASS4
-        if (np.dot(image, self.weights0) + self.bias0) > greatest:
+        if (np.dot(image, self.weights5) + self.bias5) > greatest:
             greatest = CLASS5
-        if (np.dot(image, self.weights0) + self.bias0) > greatest:
+        if (np.dot(image, self.weights6) + self.bias6) > greatest:
             greatest = CLASS6
-        if (np.dot(image, self.weights0) + self.bias0) > greatest:
+        if (np.dot(image, self.weights7) + self.bias7) > greatest:
             greatest = CLASS7
-        if (np.dot(image, self.weights0) + self.bias0) > greatest:
+        if (np.dot(image, self.weights8) + self.bias8) > greatest:
             greatest = CLASS8
-        if (np.dot(image, self.weights0) + self.bias0) > greatest:
+        if (np.dot(image, self.weights9) + self.bias9) > greatest:
             greatest = CLASS9
         return greatest
 
-    def classify(self, weights, bias, dev_set, dev_class):
+    def classify(self, bias, dev_set):
         #classify dev set
         dev_labels = []
         for image in dev_set:
@@ -107,3 +112,7 @@ class Perceptron:
             result = self.predict(image, bias)
             dev_labels.append(result)
         return dev_labels
+
+    def write_weights_to_file(filename):
+        #TODO
+        print("writing to file at: " + filename)
